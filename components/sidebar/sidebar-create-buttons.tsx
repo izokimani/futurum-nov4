@@ -39,7 +39,7 @@ export const SidebarCreateButtons: FC<SidebarCreateButtonsProps> = ({
     if (!selectedWorkspace) return
 
     const createdFolder = await createFolder({
-      user_id: profile.user_id,
+      user_id: profile.id,
       workspace_id: selectedWorkspace.id,
       name: "New Folder",
       description: "",

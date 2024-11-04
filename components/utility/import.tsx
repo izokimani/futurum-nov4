@@ -159,7 +159,7 @@ export const Import: FC<ImportProps> = ({}) => {
 
     importList.forEach(item => {
       const { contentType, ...itemWithoutContentType } = item
-      itemWithoutContentType.user_id = profile.user_id
+      itemWithoutContentType.user_id = profile.id
       itemWithoutContentType.workspace_id = selectedWorkspace.id
       saveData[contentType].push(itemWithoutContentType)
     })

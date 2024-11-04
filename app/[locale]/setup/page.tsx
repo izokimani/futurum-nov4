@@ -64,7 +64,7 @@ export default function SetupPage() {
   useEffect(() => {
     ;(async () => {
       const session = (await supabase.auth.getSession()).data.session
-
+      console.log(session)
       if (!session) {
         return router.push("/login")
       } else {
@@ -145,7 +145,7 @@ export default function SetupPage() {
     const updatedProfile = await updateProfile(profile.id, updateProfilePayload)
     setProfile(updatedProfile)
 
-    const workspaces = await getWorkspacesByUserId(profile.user_id)
+    const workspaces = await getWorkspacesByUserId(profile.id)
     const homeWorkspace = workspaces.find(w => w.is_home)
 
     // There will always be a home workspace

@@ -126,7 +126,7 @@ export const ProfileStep: FC<ProfileStepProps> = ({
           </div>
         </div>
 
-        <LimitDisplay used={username.length} limit={PROFILE_USERNAME_MAX} />
+        <LimitDisplay used={username?.length} limit={PROFILE_USERNAME_MAX} />
       </div>
 
       <div className="space-y-1">

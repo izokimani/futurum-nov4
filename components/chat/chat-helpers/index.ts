@@ -208,9 +208,12 @@ export const handleHostedChat = async (
 
   let draftMessages = await buildFinalMessages(payload, profile, chatImages)
 
-  let formattedMessages : any[] = []
+  let formattedMessages: any[] = []
   if (provider === "google") {
-    formattedMessages = await adaptMessagesForGoogleGemini(payload, draftMessages)
+    formattedMessages = await adaptMessagesForGoogleGemini(
+      payload,
+      draftMessages
+    )
   } else {
     formattedMessages = draftMessages
   }
@@ -355,7 +358,7 @@ export const handleCreateChat = async (
   setChatFiles: React.Dispatch<React.SetStateAction<ChatFile[]>>
 ) => {
   const createdChat = await createChat({
-    user_id: profile.user_id,
+    user_id: profile.id,
     workspace_id: selectedWorkspace.id,
     assistant_id: selectedAssistant?.id || null,
     context_length: chatSettings.contextLength,
@@ -373,7 +376,7 @@ export const handleCreateChat = async (
 
   await createChatFiles(
     newMessageFiles.map(file => ({
-      user_id: profile.user_id,
+      user_id: profile.id,
       chat_id: createdChat.id,
       file_id: file.id
     }))
@@ -404,7 +407,7 @@ export const handleCreateMessages = async (
   const finalUserMessage: TablesInsert<"messages"> = {
     chat_id: currentChat.id,
     assistant_id: null,
-    user_id: profile.user_id,
+    user_id: profile.id,
     content: messageContent,
     model: modelData.modelId,
     role: "user",
@@ -415,7 +418,7 @@ export const handleCreateMessages = async (
   const finalAssistantMessage: TablesInsert<"messages"> = {
     chat_id: currentChat.id,
     assistant_id: selectedAssistant?.id || null,
-    user_id: profile.user_id,
+    user_id: profile.id,
     content: generatedText,
     model: modelData.modelId,
     role: "assistant",
@@ -448,7 +451,7 @@ export const handleCreateMessages = async (
     const uploadPromises = newMessageImages
       .filter(obj => obj.file !== null)
       .map(obj => {
-        let filePath = `${profile.user_id}/${currentChat.id}/${
+        let filePath = `${profile.id}/${currentChat.id}/${
           createdMessages[0].id
         }/${uuidv4()}`
 
@@ -479,7 +482,7 @@ export const handleCreateMessages = async (
     const createdMessageFileItems = await createMessageFileItems(
       retrievedFileItems.map(fileItem => {
         return {
-          user_id: profile.user_id,
+          user_id: profile.id,
           message_id: createdMessages[1].id,
           file_item_id: fileItem.id
         }
