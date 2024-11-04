@@ -9,6 +9,7 @@ import { get } from "@vercel/edge-config"
 import { Metadata } from "next"
 import { cookies, headers } from "next/headers"
 import { redirect } from "next/navigation"
+import { toast } from "sonner"
 
 export const metadata: Metadata = {
   title: "Login"
@@ -38,14 +39,11 @@ export default async function Login({
       .from("workspaces")
       .select("*")
       .eq("user_id", session.user.id)
-      .eq("is_home", true)
-      .single()
+      .maybeSingle()
 
-    if (!homeWorkspace) {
-      throw new Error(error.message)
-    }
-
-    return redirect(`/${homeWorkspace.id}/chat`)
+    if (error) {
+      toast.error("An unexpected error occurred")
+    } else return redirect(`/${homeWorkspace?.id}/chat`)
   }
 
   const signIn = async (formData: FormData) => {
@@ -69,16 +67,11 @@ export default async function Login({
       .from("workspaces")
       .select("*")
       .eq("user_id", data.user.id)
-      .eq("is_home", true)
-      .single()
+      .maybeSingle()
 
-    if (!homeWorkspace) {
-      throw new Error(
-        homeWorkspaceError?.message || "An unexpected error occurred"
-      )
-    }
-
-    return redirect(`/${homeWorkspace.id}/chat`)
+    if (homeWorkspaceError) {
+      toast.error("An unexpected error occurred")
+    } else return redirect(`/${homeWorkspace?.id}/chat`)
   }
 
   const getEnvVarOrEdgeConfigValue = async (name: string) => {
